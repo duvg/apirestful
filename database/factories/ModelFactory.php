@@ -1,5 +1,11 @@
 <?php
 
+use App\Category;
+use App\Product;
+use App\Seller;
+use App\Transaction;
+use App\User;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -12,7 +18,7 @@
 */
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(User::class, function (Faker\Generator $faker) {
     static $password;
 
     return [
@@ -20,5 +26,51 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'verified' => $verificado = $faker->randomElement([User::USER_VERIFIED, User::USER_UNVERIFIED]),
+        'verification_token' => $verificado == User::USER_VERIFIED ? null: User::generarVerificationToken(),
+        'admin' => $faker->randomElement([User::USER_ADMIN, User::USER_REGULAR]),
+
     ];
 });
+
+
+$factory->define(Category::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->word,
+        'description' => $faker->paragraph(1),
+
+    ];
+});
+
+$factory->define(Product::class, function (Faker\Generator $faker) {
+
+    return [
+        'name' => $faker->word,
+        'description' => $faker->paragraph(1),
+        'quantity' => $faker->numberBetween(1, 10),
+        'status' => $faker->randomElement([Product::PRODUCT_AVAILABLE, Product::PRODUCT_NOT_AVAILABLE]),
+        'image' => $faker->randomElement(['1.jpg', '2.jpg', '3.jpg']),
+        'seller_id' => User::all()->random()->id,
+    ];
+});
+
+
+$factory->define(Transaction::class, function (Faker\Generator $faker) {
+    try{
+        $vendedor = Seller::has('products')->get()->random();
+        $comprador = User::all()->except($vendedor->id)->random();
+
+        return [    
+            'quantity' => $faker->numberBetween(1, 3),
+            'buyer_id' => $comprador->id,
+            'product_id' => $vendedor->products->random()->id,
+            
+            
+        ];
+    }catch(\Exception $e) {
+        return $e->getMessage();
+    }
+    
+});
+

@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-	const PRODUCTO_DISPONIBLE = 'disponible';
-	const PRODUCTO_NO_DISPONIBLE = 'no disponible';
+	const PRODUCT_AVAILABLE = 'disponible';
+	const PRODUCT_NOT_AVAILABLE = 'no disponible';
 
     protected $fillable = [
     	'name',
@@ -23,12 +23,12 @@ class Product extends Model
 
     public function estaDisponible()
     {
-    	return $this->status == Product::PRODUCTO_DISPONIBLE;
+    	return $this->status == Product::PRODUCT_AVAILABLE;
     }
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class)
+        return $this->belongsToMany(Category::class);
     }
 
     public function seller()

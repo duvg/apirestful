@@ -10,12 +10,14 @@ class User extends Authenticatable
     use Notifiable;
 
     // Verificación del usuario
-    const USUARIO_VERIFICADO = '1';
-    const USUARIO_NO_VERIFICADO = '0';
+    const USER_VERIFIED = '1';
+    const USER_UNVERIFIED = '0';
 
     // Verificar el rol del usuario
-    const USUARIO_ADMINISTRADOR = 'true',
-    const USUARIO_REGULAR = 'false';
+    const USER_ADMIN = 'true';
+    const USER_REGULAR = 'false';
+
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -42,17 +44,17 @@ class User extends Authenticatable
         'verification_token'
     ];
 
-    public esVerificado()
+    public function isVerified()
     {
-        return $this->verified == User::USUARIO_VERIFICADO;
+        return $this->verified == User::USER_VERIFIED;
     }
 
-    public function esAdministrador()
+    public function isAdministrator()
     {
-        return $this->admin == User::USUARIO_ADMINISTRADOR;
+        return $this->admin == User::USER_ADMIN;
     }
 
-    public static function ()
+    public static function generateVerificationToken()
     {
         return str_random(40);
     }
