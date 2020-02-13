@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +18,7 @@ class UserController extends Controller
         // List all resources from user entity
         $users = User::all();
 
-        // Response json(data, code_status)
-        return request()->json(200, ["data" => $users]);
+        return $this->showAll($users);
     }
 
     /**
@@ -49,8 +48,7 @@ class UserController extends Controller
 
         $user = User::create($fields);
 
-        // Response json(data, code_status)
-        return response()->json(['data' => $user], 201);
+        return $this->showOne($user, 201);
     }
 
     /**
@@ -64,8 +62,7 @@ class UserController extends Controller
         // find a user by id
         $user = User::findOrFail($id);
 
-        // Response json(data, code_status)
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 
     /**
@@ -110,14 +107,7 @@ class UserController extends Controller
         if ($request->has('admin')) {
             if (!$user->esVerified) {
 
-                // Response json(data, code_status)
-                return response()->json( 
-                    [
-                        'error' => 'Solo los usuatios verificados puden cambiar su rol a administrador', 
-                        'code' => 409
-                    ], 
-                    409
-                );
+                return $this->errorResponse('Solo los usuatios verificados puden cambiar su rol a administrador', 409);
             }
 
             $user->admin = $request->admin;
@@ -125,23 +115,14 @@ class UserController extends Controller
 
         // Check if data don`t  have new changes
         if (!$user->isDirty()) {
-            // Response json(data, code_status)
-            return response()->json(
-                [
-                    'error' => 'Se debe especificar al menos un valor diferente para actualizar',
-                    'code' => 422 
-                ],
-                422
-            );
+
+            return $this->errorResponse('Se debe especificar al menos un valor diferente para actualizar', 422);
         }
 
         // Save changes if pass all validations
         $user->save();
 
-        // Response json(data, code_status)
-        return response()->json(['data' => $user], 200);
-
-
+        return $this->showOne($user);
     }
 
     /**
@@ -158,7 +139,6 @@ class UserController extends Controller
         $user->delete();
 
         // Return user deleted
-        // Response json(data, code_status)
-        return response()->json(['data' => $user], 200);
+        return $this->showOne($user);
     }
 }
