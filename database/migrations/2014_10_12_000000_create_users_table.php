@@ -20,9 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
-            $table->string('verified')->default(User::USUARIO_NO_VERIFICADO);
+            $table->string('verified')->default(User::USER_UNVERIFIED);
             $table->string('verification_token')->nullable();
-            $table->string('admin')->default(User::USUARIO_REGULAR);
+            $table->string('admin')->default(User::USER_REGULAR);
             $table->timestamps();
         });
     }
