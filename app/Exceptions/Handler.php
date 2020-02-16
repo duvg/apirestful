@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
@@ -24,7 +25,6 @@ class Handler extends ExceptionHandler
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
         \Symfony\Component\HttpKernel\Exception\HttpException::class,
-        \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
     ];
@@ -95,9 +95,12 @@ class Handler extends ExceptionHandler
         // Handle integrity relationship exception
         if ($exception instanceof QueryException) {
             $code = $exception->errorInfo[1];
+
             if ($code == 1451) {
                  return $this->errorResponse('No es posible eliminar de forma permanete el recurso porque esta relacionado con otro', 409);
             }
+
+            return $this->errorResponse('Ups! algo salio mal, intenta más tarde', 500);
             
         }
 
