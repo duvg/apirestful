@@ -6,9 +6,12 @@ use App\Seller;
 use App\Category;
 use App\Transaction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use SoftDeletes;
+
 	const PRODUCT_AVAILABLE = 'disponible';
 	const PRODUCT_NOT_AVAILABLE = 'no disponible';
 
@@ -20,6 +23,8 @@ class Product extends Model
     	'image',
     	'seller_id'
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function estaDisponible()
     {
