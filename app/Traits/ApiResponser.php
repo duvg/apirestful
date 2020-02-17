@@ -32,5 +32,11 @@ trait ApiResponser
 		return $this->successResponse($instance, $code);
 	}
 
+	// Return a string
+	protected function showMessage($message, $code)
+	{
+		return $this->successResponse(['data' => $message], $code);
+	}
+
 
 }
