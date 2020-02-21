@@ -1,7 +1,7 @@
 @component('mail::message')
 # Hola {{$user->name}}
 
-Gracias por registrate, verifica tu cuenta usando el siguiente enlace:
+Has cambiado tu correo electronico, porfavor verificalo usando el siguiente enlace:
 
 @component('mail::button', ['url' => route('verify', $user->verification_token)])
 Confirmar mi cuenta
