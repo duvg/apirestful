@@ -11,7 +11,7 @@ trait ApiResponser
 	// Respose for success operation
 	private function successResponse($data, $code)
 	{
-		return response()->json(['data' => $data], $code);
+		return response()->json($data, $code);
 	}
 
 	// Response for error in proccess
@@ -23,19 +23,38 @@ trait ApiResponser
 	// Return a collection of results 
 	protected function showAll(Collection $collection, $code = 200)
 	{
+		if ($collection->isEmpty()) 
+		{
+			return $this->successResponse(['data' => $collection], $code);
+		}
+		$transformer = $collection->first()->transformer;
+		$collection = $this->transformData($collection, $transformer);
+
+
 		return $this->successResponse($collection, $code);
 	}
 
 	// Return a record
 	protected function showOne(Model $instance, $code = 200)
 	{
-		return $this->successResponse($instance, $code);
+		$transformer = $instance->transformer;
+		$data = $this->transformData($instance, $transformer);
+		return $this->successResponse($data, $code);
 	}
 
 	// Return a string
 	protected function showMessage($message, $code)
 	{
 		return $this->successResponse(['data' => $message], $code);
+	}
+
+	// Transform data
+	protected function transformData($data, $transformer)
+	{
+		$transformation = fractal($data, new $transformer);
+
+		return $transformation->toArray();
+
 	}
 
 

@@ -18,11 +18,11 @@ class UserTransformer extends TransformerAbstract
             'identificador' => (int)$user->id,
             'nombre' => (string)$user->name,
             'correo' => (string)$user->email,
-            'verificado' >= (int)$user->verified,
+            'verificado' => (int)$user->verified,
             'esAdministrador' => ($user->admin === 'true'),
-            'fechaCreacion' => (string)$user->createdAt,
-            'fechaAtualizacion' => (string)$user->updatedAt,
-            'fechaEliminacion' => isset($user->deletedAt) ? (string)$user->deletedAt : null,
+            'fechaCreacion' => (string)$user->created_at,
+            'fechaAtualizacion' => (string)$user->updated_at,
+            'fechaEliminacion' => isset($user->deleted_at) ? (string)$user->deleted_at : null,
         ];
     }
 }
