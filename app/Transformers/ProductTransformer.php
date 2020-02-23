@@ -54,15 +54,33 @@ class ProductTransformer extends TransformerAbstract
     {
         $attributes = [
             'identificador' => 'id',
-            'titulo' => (string)$product->name,
-            'detalles' => (string)$product->description,
-            'disponibles' => (int)$product->quantity,
-            'estado' => (string)$product->status,
-            'imagen' => url("img/{$product->image}"),
-            'vendedor' => (int)$product->seller_id,
+            'titulo' => 'name',
+            'detalles' => 'description',
+            'disponibles' => 'quantity',
+            'estado' => 'status',
+            'imagen' => 'imagen',
+            'vendedor' => 'vendedor',
             'fechaCreacion' => 'created_at',
             'fechaAtualizacion' => 'updated_at',
             'fechaEliminacion' => 'deleted_at',
+        ];
+
+        return isset($attributes[$index]) ? $attributes[$index] : null;
+    }
+
+    public static function transformedAttribute($index)
+    {
+        $attributes = [
+            'id' => 'identificador',
+            'name' => 'titulo',
+            'description' => 'detalles',
+            'quantity' => 'disponibles',
+            'status' => 'estado',
+            'imagen' => 'imagen',
+            'vendedor' => 'vendedor',
+            'created_at' => 'fechaCreacion',
+            'updated_at' => 'fechaAtualizacion',
+            'deleted_at' => 'fechaEliminacion',
         ];
 
         return isset($attributes[$index]) ? $attributes[$index] : null;
