@@ -70,4 +70,14 @@ Route::name('resend')->get('users/{user}/resend', 'User\UserController@resend');
 
 
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+Route::post('/user', 'User\UserController@getAutenticatedUser');
+//Route::post('login', 'User\UserController@authenticate');
+
+Route::group([
+    'prefix' => 'auth',
+], function () {
+    Route::post('login', 'User\AuthController@login');
+    Route::post('logout', 'User\AuthController@logout');
+    Route::post('refresh', 'User\AuthController@refresh');
+});
 

@@ -8,9 +8,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+// JWTSubject 
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
 {
-    use Notifiable, HasApiTokens, SoftDeletes;
+    use Notifiable, SoftDeletes;
 
     // Verificación del usuario
     const USER_VERIFIED = '1';
@@ -85,5 +88,16 @@ class User extends Authenticatable
     public static function generateVerificationToken()
     {
         return str_random(40);
+    }
+
+    // JWT Token
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

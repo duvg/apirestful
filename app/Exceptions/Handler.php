@@ -101,7 +101,9 @@ class Handler extends ExceptionHandler
                  return $this->errorResponse('No es posible eliminar de forma permanete el recurso porque esta relacionado con otro', 409);
             }
 
-            return $this->errorResponse('Ups! algo salio mal, intenta más tarde', 500);
+            $this->errorResponse($exception->getMessage(), 500);
+
+            //return $this->errorResponse('Ups! algo salio mal, intenta más tarde', 500);
             
         }
 

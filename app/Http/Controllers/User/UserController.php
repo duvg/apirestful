@@ -15,9 +15,9 @@ class UserController extends ApiController
     public function __construct()
     {
         
-        $this->middleware('client.credentials')->only(['store', 'resend']);
-        $this->middleware('auth:api')->except(['store', 'resend', 'verify']);
-        $this->middleware('transform.input:' . UserTransformer::class)->only(['store', 'update']);
+        //$this->middleware('client.credentials')->only(['store', 'resend']);
+        //$this->middleware('auth:api')->except(['store', 'resend', 'verify']);
+        $this->middleware('transform.input:' . UserTransformer::class)->only(['store', 'update', 'getAutenticatedUser']);
     }
 
     /**
@@ -59,6 +59,8 @@ class UserController extends ApiController
         $fields['admin'] = User::USER_REGULAR;
 
         $user = User::create($fields);
+
+        $token = JWTAuth::fromUser($user);
 
         return $this->showOne($user, 201);
     }
@@ -170,5 +172,17 @@ class UserController extends ApiController
 
         return $this->showMessage('El correo de verificación ha sido reenviado!', 200);
     }
+
+
+    public function getAutenticatedUser(Request $request) {
+        $user = User::find(auth()->guard('api')->user()->id);
+        return $this->showOne($user);
+    }
+
+
+    
+
+
+
 
 }
