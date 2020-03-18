@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 
-class AuthController extends Controller
+class AuthController extends ApiController
 {
     public function __construct()
     {
@@ -66,11 +68,18 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+    	// transform user data
+    	$user = User::find(auth()->user()->id);
+
+    	$user = $this->showOne($user);
+
+    	$user =$user->original;
+        
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user(),
+            'user' =>$user,
         ]);
     }
 }
